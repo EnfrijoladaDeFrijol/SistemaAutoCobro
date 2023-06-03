@@ -4,6 +4,7 @@ public class Main{
 	public static void main(String[] args){
 		Scanner scanOpc = new Scanner(System.in);
 		int opc = 0; // Definimos un opción default
+		Articulo misArticulos [] = new Articulo[2];
 
 		do{
 			imprimirTitulo();
@@ -14,16 +15,23 @@ public class Main{
 			switch(opc){
 				case 1: // Agregar articulos
 					imprimrMenuAgregar();
+					misArticulos[0] = new Articulo("Jabón", 17.5, "HS7HVCD89");
+					misArticulos[1] = new Articulo("Jamon", 34.9, "JDC712UIH");
+					for (Articulo articulo: misArticulos){
+						articulo.mostrarDatos();
+					}
+					// Hay que agreagar un while
 					break;
 				case 2:
-					System.out.println("HOla 2");
+					System.out.println( "HOla 2");
 					break;
 				case 3:
-					imprimirDespedidsa();
+					imprimirDespedida();
 					break;
 				default:
-					System.out.println("otra opción");
+					System.out.println("Opción no válida");
 					break;
+
 
 			}// Cierra el switch	
 			
@@ -58,15 +66,16 @@ public class Main{
 		int opcion = scanOpc.nextInt();	
 		return opcion;
 	}
-	public static void imprimirDespedidsa(){
+	public static void imprimirDespedida(){
 		System.out.println("Gracias por irse");
 		System.out.println("Modificar este mensaje p0ara que se vea pro");
 	}
+    // Métodos para la opción de agregar articulos
 	public static void imprimrMenuAgregar(){
 		// Listamos los articulos, pedimos clave agregamos y salimos
 		// Cada vez que se agregue un ariculo lo creamos
 		System.out.println("\n     --- ( A G R E G A R   A R T I C U L O S) ---");
-		System.out.println("\n\t - Ingresa la clave del articulo\n	- Ingresa '0' para terminar de agregar\n");
+		System.out.println("\n\t - Ingresa la clave del articulo\n	- Ingresa '0' para pagar\n");
 		
 		// Pedimos datos
 	}
