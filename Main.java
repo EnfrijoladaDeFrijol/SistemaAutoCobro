@@ -1,10 +1,16 @@
+
 import java.util.Scanner; // Biblioteca para lectura de datos
+import java.util.ArrayList; // Para lista dinámica
+import java.util.List;
 
 public class Main{
 	public static void main(String[] args){
 		Scanner scanOpc = new Scanner(System.in);
 		int opc = 0; // Definimos un opción default
-		Articulo misArticulos [] = new Articulo[2];
+		List<Articulo> misArticulos = new ArrayList<>(); // "carrito de compras"
+		// Leemos el CSV
+		LectorCSV contenidoCSV = new LectorCSV();		
+		contenidoCSV.leerArchivoCSV(".//ProductosBD.csv");
 
 		do{
 			imprimirTitulo();
@@ -15,15 +21,15 @@ public class Main{
 			switch(opc){
 				case 1: // Agregar articulos
 					imprimrMenuAgregar();
-					misArticulos[0] = new Articulo("Jabón", 17.5, "HS7HVCD89");
-					misArticulos[1] = new Articulo("Jamon", 34.9, "JDC712UIH");
-					for (Articulo articulo: misArticulos){
-						articulo.mostrarDatos();
-					}
+					contenidoCSV.imprimirLinea();
+
+					misArticulos.add(new Articulo("Jamonmm", 34.9, 1001));
+					
+					listarCarrito(misArticulos);
 					// Hay que agreagar un while
 					break;
 				case 2:
-					System.out.println( "HOla 2");
+					System.out.println("HOla 2");
 					break;
 				case 3:
 					imprimirDespedida();
@@ -55,8 +61,8 @@ public class Main{
 		System.out.println("\n-------------------------------------------------");
 	}
 	public static void imprimirMenu(){
-		System.out.println("\n\t     --- ( M E N Ú ) ---");
-		System.out.println("   Ingresa el número de la opción que deseas\n");
+		System.out.println("\n\t     --- ( M E N U ) ---");
+		System.out.println("   Ingresa el numero de la opcion que deseas\n");
 		System.out.println("\t\t1) Agregar articulos");
 		System.out.println("\t\t2) Pagar");
 		System.out.println("\t\t3) Salir");
@@ -75,9 +81,16 @@ public class Main{
 		// Listamos los articulos, pedimos clave agregamos y salimos
 		// Cada vez que se agregue un ariculo lo creamos
 		System.out.println("\n     --- ( A G R E G A R   A R T I C U L O S) ---");
-		System.out.println("\n\t - Ingresa la clave del articulo\n	- Ingresa '0' para pagar\n");
+		System.out.println("\n\t - Ingresa la clave del articulo");
+		System.out.println(" - Ingresa '0' para salir de este menú");
 		
 		// Pedimos datos
+	}
+
+	public static void listarCarrito(List<Articulo> misArticulos){
+		for (Articulo articulo: misArticulos){
+			articulo.mostrarDatos();
+		}
 	}
 
 } // Cierra clase Main
