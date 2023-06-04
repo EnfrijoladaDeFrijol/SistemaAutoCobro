@@ -2,10 +2,10 @@ public class Articulo{
 	// Atributos
 	String nombre;
 	double precio;
-	String codigoBarras;
+	int codigoBarras;
 	
 	// Constructor
-	public Articulo(String nom, double prec, String codigo){
+	public Articulo(String nom, double prec, int codigo){
 		this.nombre = nom;
 		this.precio = prec;
 		this.codigoBarras = codigo;
