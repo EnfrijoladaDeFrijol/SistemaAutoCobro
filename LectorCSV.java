@@ -1,35 +1,48 @@
-import javax.swing.JOptionPane;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LectorCSV{
-    private BufferedReader lector; //lee el archivo
-    private String linea; // linea de cada fila
-    private String contenidoCSVLinea[] = null;
+    private List<List<String>> contenidoCSV;
 
-    public void leerArchivoCSV(String nombreArchivo){
-        try{
-            lector  = new BufferedReader(new FileReader(nombreArchivo));
+    public LectorCSV(){
+        contenidoCSV = new ArrayList<>();
+    }
+    
 
-            while((linea = lector.readLine()) != null){
-                contenidoCSVLinea = linea.split(",");
-                System.out.println(); // Solo para dar formato
+    public void leerCSV(String nombreArchivo){
+        try (BufferedReader reader = new BufferedReader(new FileReader(nombreArchivo))) {
+            String linea;
+            while ((linea = reader.readLine()) != null) {
+                String[] valores = linea.split(",");
+                List<String> fila = new ArrayList<>();
+                for (String valor : valores) {
+                    fila.add(valor);
+                }
+                contenidoCSV.add(fila);
             }
-                
-            }
-            lector.close();
-            linea = null; // null para evitar acumulación de datos
-        }catch (Exception e){
-            JOptionPane.showMessageDialog(null,e);
+        }catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    public void imprimirLinea(){
+        public void mostrarDatos(){
         System.out.println("    Nombre\t   Precio\t   Codigo");
         System.out.println("---------------------------------------------");
-        for(int i=0; i<contenidoCSV.length; i++){
-            System.out.print(contenidoCSV[i]+"\t    ");
+        for (List<String> fila : contenidoCSV) {
+            for (String valor : fila) {
+                System.out.print(valor+"\t    ");
+            }
+            System.out.println();
         }
+    }
+    
+
+    public void mostrarUnDato(){ 
+        System.out.println("AAAAAAAAAAAAAAAAAAAA");
+        System.out.println(contenidoCSV.get(0).get(1));
     }
 
 }
