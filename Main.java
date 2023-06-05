@@ -9,10 +9,11 @@ public class Main{
 		Scanner scanOpcAgregar = new Scanner(System.in);
 
 		int opc = 0; // Definimos un opción default
-		List<Articulo> misArticulos = new ArrayList<>(); // "carrito de compras"
+		List<List<Articulo>> misArticulos = new ArrayList<>(); // "carrito de compras"
 		// Leemos el CSV
 		LectorCSV contenidoCSV = new LectorCSV(); //Para leer la base datos		
 		contenidoCSV.leerCSV(".//ProductosBD.csv"); // Leemos base datos
+		double total = 0.00, totalEfectivo = 0.00;
 
 		do{
 			imprimirTitulo();
@@ -21,22 +22,64 @@ public class Main{
 
 			opc = elegirOpcion(scanOpc); // Leemos la opción ingresada tipo scanner
 			switch(opc){
-				case 1: // Agregar articulos
-					int opcAgregar = 1;
+				case 1: // -------------- A g r e g a r   a r t i c u l o s
+					int opcAgregar = 1; // También iremos buscando los codigos
+					int filaEncontrada = -1;
+					String nombre = null;
+					double precio = 0; 
+					
+					int codigo = 0;
 					contenidoCSV.mostrarDatos(); // Mostramos el catálogo de productos
 					imprimrMenuAgregar();
-					//contenidoCSV.mostrarUnDato();
+					
 					do{
 						opcAgregar = elegirOpcionAgregar(scanOpcAgregar);
+						if (opcAgregar != 0){
+							filaEncontrada = contenidoCSV.buscarArticulo(opcAgregar); // Guarda indice de fila
+							if(filaEncontrada != -1){ // Acá vamos a agregar al carrito
+								//contenidoCSV.mostrarUnDato(filaEncontrada);
+								nombre = contenidoCSV.obtenerNombre(filaEncontrada);
+								precio = contenidoCSV.obtenerPrecio(filaEncontrada);
+								codigo = contenidoCSV.obtenerCodigo(filaEncontrada);
+								// Creamos el objeto y lo agregamos al carrito
+								List<Articulo> filaMisArticulos = new ArrayList<>(); // Creamos otra fila de la lista del carrito
+								filaMisArticulos.add(new Articulo(nombre, precio, codigo));
+								System.out.println("\t  '"+nombre+"' agregado al carrito");
+								misArticulos.add(filaMisArticulos);
+								total = sacarCuenta(misArticulos);
+								filaMisArticulos = null;
+
+							}else{ // Por si no se encontró ningun valor
+								System.out.println("\t[ADVERTENCIA] No se encontro articulo");
+							}
+						}
+						//System.out.println("FILA ENCONTRADAAAAA: "+filaEncontrada); // Array list
 					}while(opcAgregar != 0);
-					//misArticulos.add(new Articulo("Jamon", 34.9, 1001));
+					
 					break;
-				case 2: // Listar carrito
-					System.out.println("L I S T A M O S   C A R R I T O");
-					listarCarrito(misArticulos);
+				case 2: // --------------------- L i s t a r    c a r r i t o
+					listarCarrito(misArticulos, total);
 					break;
-				case 3: // Pagar
-					System.out.println("P A G A R");
+				case 3: // --------------------- P a g a r
+					System.out.println("\n\t  --- ( P A G A R ) ---");
+					System.out.println("  Se necesita pagar un total de: $"+total);
+					double dineroDisponible = contarEfectivo(totalEfectivo); // Vemos la cantidad de dinero disp
+					
+					if(dineroDisponible < total){ // Caso donde no alcanza
+						System.out.println("\n\n\tDinero insuficiente...");
+						System.out.println("  Usted cuenta con: $ "+dineroDisponible);
+						System.out.println("Necesitaba pagar: $ "+total);
+					}else{ // Caso done se alcanza el dinero y se paga
+						System.out.println("\n\n\t ==-== ( T I C K E T ) ==-==");
+						listarCarrito(misArticulos, total);
+						double cambio = dineroDisponible-total;
+
+						System.out.println("\t  Pagado: \t     $ "+dineroDisponible);
+						System.out.println("\n\t  Cambio: \t     $ "+cambio);
+					}
+
+					imprimirDespedida();
+					System.exit(0);
 					break;
 				case 4:
 					imprimirDespedida();
@@ -44,10 +87,7 @@ public class Main{
 				default:
 					System.out.println("Opción no válida");
 					break;
-
-
 			}// Cierra el switch	
-			
 		}while(opc != 4);
 
 		scanOpc.close();
@@ -81,8 +121,12 @@ public class Main{
 		return opcion;
 	}
 	public static void imprimirDespedida(){
-		System.out.println("Gracias por irse");
-		System.out.println("Modificar este mensaje p0ara que se vea pro");
+		System.out.println();
+		System.out.println("\t   ___     ___        ");
+		System.out.println("\t  / _ |___/ (_)__  ___");
+		System.out.println("\t / __ | _  / / _ |(_-<");
+		System.out.println("\t/_/ |_|_,_/_/|___/___/");
+		System.out.println("\n\n");
 	}
     // Métodos para la opción de agregar articulos
 	public static void imprimrMenuAgregar(){
@@ -94,17 +138,62 @@ public class Main{
 	}
 
 	public static int elegirOpcionAgregar(Scanner scanOpcAgregar){
-		System.out.print("  Codigo >> ");
+		System.out.print("\tCodigo: ");
 		int opcion = scanOpcAgregar.nextInt();	
 		return opcion;
 	}
-		
-		// Pedimos datos
 
-	public static void listarCarrito(List<Articulo> misArticulos){
-		for (Articulo articulo: misArticulos){
-			articulo.mostrarDatos();
+	public static double sacarCuenta(List<List<Articulo>> misArticulos){
+		double total = 0.00;
+		for (List<Articulo> lista : misArticulos) {
+			for (Articulo articulo : lista){
+				total = total + articulo.getPrecio();
+			}
 		}
+		return total;
+	}	
+
+
+	public static void listarCarrito(List<List<Articulo>> misArticulos, double total){
+		System.out.println("\n\t  --- ( C A R R I T O ) ---");
+ 		for (List<Articulo> lista : misArticulos) {
+			for (Articulo articulo : lista){
+				System.out.println("\t  ---------------------------");
+				System.out.print("\t  "+articulo.getNombre()+"\t  $");
+				System.out.println(" "+articulo.getPrecio());
+				System.out.println("\t  "+articulo.getCodigo());
+			}
+		}
+		System.out.println("\n\t  ===========================");
+				System.out.println("\t  Total:\t    $ "+total);
+	}
+
+	//Para pagar
+	public static double contarEfectivo(double totalEfectivo){
+		Scanner cantidad = new Scanner(System.in);
+		int numCantidad = 0;
+		System.out.println("\n  Ingrese la cantiddad de dinero que tenga\n");
+
+		// Monedas de 10 pesos
+		System.out.print("   Cantidad monedas $10 pesos: ");
+		numCantidad = cantidad.nextInt();
+		totalEfectivo = totalEfectivo + (10*numCantidad);
+
+		// Billetes 20 pesos
+		System.out.print("   Cantidad billetes $20 pesos: ");
+		numCantidad = cantidad.nextInt();
+		totalEfectivo = totalEfectivo + (20*numCantidad);
+
+		// billetes 50 pesos
+		System.out.print("   Cantidad billetes $50 pesos: ");
+		numCantidad = cantidad.nextInt();
+		totalEfectivo = totalEfectivo + (50*numCantidad);
+		imprimirLInea();
+		System.out.println();
+
+
+		cantidad.close();
+		return totalEfectivo;
 	}
 
 } // Cierra clase Main
