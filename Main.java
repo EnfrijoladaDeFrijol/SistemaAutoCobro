@@ -60,7 +60,10 @@ public class Main{
 				case 2: // --------------------- L i s t a r    c a r r i t o
 					listarCarrito(misArticulos, total);
 					break;
-				case 3: // --------------------- P a g a r
+				case 3: // --------------------- b o r r a r   p r o d u c t o s
+					System.out.println("BORRAARRRR");
+					break;
+				case 4:
 					System.out.println("\n\t  --- ( P A G A R ) ---");
 					System.out.println("  Se necesita pagar un total de: $"+total);
 					double dineroDisponible = contarEfectivo(totalEfectivo); // Vemos la cantidad de dinero disp
@@ -81,7 +84,7 @@ public class Main{
 					imprimirDespedida();
 					System.exit(0);
 					break;
-				case 4:
+				case 5: // --------------------- P a g a r
 					imprimirDespedida();
 					break;
 				default:
@@ -112,8 +115,9 @@ public class Main{
 		System.out.println("   Ingresa el numero de la opcion que deseas\n");
 		System.out.println("\t\t1) Agregar articulos");
 		System.out.println("\t\t2) Ver carrito"); 
-		System.out.println("\t\t3) Pagar");
-		System.out.println("\t\t4) Salir");
+		System.out.println("\t\t3) Borrar prodcutos");
+		System.out.println("\t\t4) Pagar");
+		System.out.println("\t\t5) Salir");
 	}
 	public static int elegirOpcion(Scanner scanOpc){
 		System.out.print("\n\t\t>> ");
