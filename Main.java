@@ -61,7 +61,19 @@ public class Main{
 					listarCarrito(misArticulos, total);
 					break;
 				case 3: // --------------------- b o r r a r   p r o d u c t o s
-					System.out.println("BORRAARRRR");
+					listarCarritoConIndice(misArticulos, total);
+					System.out.println("Ingresa el Indice del artículo que deseas borrar (ingresa -1 para cancelar): ");
+					int indiceBorrar = scanOpc.nextInt();
+
+					if (indiceBorrar >= 0 && indiceBorrar < misArticulos.size()) {
+						misArticulos.remove(indiceBorrar);
+						System.out.println("Producto borrado exitosamente.");
+						total = sacarCuenta(misArticulos);
+					} else if (indiceBorrar != -1) {
+						System.out.println("Indice no válido. Producto no borrado.");
+					} else {
+						System.out.println("Operación cancelada.");
+					}
 					break;
 				case 4:
 					System.out.println("\n\t  --- ( P A G A R ) ---");
@@ -84,8 +96,9 @@ public class Main{
 					imprimirDespedida();
 					System.exit(0);
 					break;
-				case 5: // --------------------- P a g a r
+				case 5: // --------------------- S a l i r
 					imprimirDespedida();
+					
 					break;
 				default:
 					System.out.println("Opción no válida");
@@ -178,26 +191,44 @@ public class Main{
 		int numCantidad = 0;
 		System.out.println("\n  Ingrese la cantiddad de dinero que tenga\n");
 
-		// Monedas de 10 pesos
-		System.out.print("   Cantidad monedas $10 pesos: ");
+		// billetes 50 pesos
+		System.out.print("   Cantidad billetes $50 pesos: ");
 		numCantidad = cantidad.nextInt();
-		totalEfectivo = totalEfectivo + (10*numCantidad);
+		totalEfectivo = totalEfectivo + (50*numCantidad);
 
 		// Billetes 20 pesos
 		System.out.print("   Cantidad billetes $20 pesos: ");
 		numCantidad = cantidad.nextInt();
 		totalEfectivo = totalEfectivo + (20*numCantidad);
 
-		// billetes 50 pesos
-		System.out.print("   Cantidad billetes $50 pesos: ");
+		// Monedas de 10 pesos
+		System.out.print("   Cantidad monedas $10 pesos: ");
 		numCantidad = cantidad.nextInt();
-		totalEfectivo = totalEfectivo + (50*numCantidad);
+		totalEfectivo = totalEfectivo + (10*numCantidad);
+
 		imprimirLInea();
 		System.out.println();
+
 
 
 		cantidad.close();
 		return totalEfectivo;
 	}
+
+	public static void listarCarritoConIndice(List<List<Articulo>> misArticulos, double total) {
+    System.out.println("\n\t  --- ( C A R R I T O ) ---");
+    for (int i = 0; i < misArticulos.size(); i++) {
+        for (Articulo articulo : misArticulos.get(i)) {
+            System.out.println("\t  ---------------------------");
+            //System.out.println("\t  Indice: " + i);
+            System.out.print("\t  ["+i+"]  "+ articulo.getNombre() + "\t  $");
+            System.out.println(" " + articulo.getPrecio());
+            System.out.println("\t  " + articulo.getCodigo());
+        }
+    }
+    System.out.println("\n\t  ===========================");
+    System.out.println("\t  Total:\t    $ " + total);
+}
+
 
 } // Cierra clase Main
